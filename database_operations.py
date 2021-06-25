@@ -42,7 +42,6 @@ def insert_to_tweet_table(dbName: str, df: pd.DataFrame, table_name: str) -> Non
 
     conn, cur = connect_to_db(dbName)
 
-
     for _, row in df.iterrows():
         sqlQuery = f"""INSERT INTO {table_name} (clean_text, polarity, subjectivity)
              VALUES(%s, %s, %s);"""
@@ -59,13 +58,10 @@ def insert_to_tweet_table(dbName: str, df: pd.DataFrame, table_name: str) -> Non
             print("Error: ", e)
     return
 
-def db_execute_fetch(*args, many=False, tablename='', rdf=True, **kwargs) -> pd.DataFrame:
+def db_execute_fetch(query, tablename='', dbName = None) -> pd.DataFrame:
  
-    connection, cursor1 = connect_to_db(**kwargs)
-    if many:
-        cursor1.executemany(*args)
-    else:
-        cursor1.execute(*args)
+    connection, cursor1 = connect_to_db(dbName = dbName)
+    cursor1.execute(query)
 
     # get column names
     field_names = [i[0] for i in cursor1.description]
@@ -82,12 +78,8 @@ def db_execute_fetch(*args, many=False, tablename='', rdf=True, **kwargs) -> pd.
     connection.close()
 
     # return result
-    if rdf:
-        return pd.DataFrame(res, columns=field_names)
-    else:
-        return res
-
-
+    return pd.DataFrame(res, columns=field_names)
+    
 if __name__ == "__main__":
     connect_to_db(dbName='tweets')
     create_table(dbName='tweets')

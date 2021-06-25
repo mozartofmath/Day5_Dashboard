@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+from database_operations import db_execute_fetch
 
 def main():
     st.title("Dashboard")
@@ -8,8 +11,15 @@ def main():
 #    Which one is the best?
 #    ''')
 
-    app_mode = st.sidebar.selectbox("My Models", ("Topic Modelling", "Sentiment Analysis"))
-    if app_mode == 'Topic Modelling':
+    app_mode = st.sidebar.selectbox("Choose what you want to see from this box.", ("Visualize Data","Topic Modelling", "Sentiment Analysis"))
+    if app_mode == 'Visualize Data':
+        st.write('''
+        # Explore The Data
+        Do you like the presentation?
+        ''')
+        dataframe = db_execute_fetch("Select * from cleantweetinfo where (id < 6);", tablename='cleantweetinfo', dbName = 'tweets')
+        st.table(dataframe)
+    elif app_mode == 'Topic Modelling':
         st.write('''
         # Explore Topic Modelling
         Do you like the performance?
