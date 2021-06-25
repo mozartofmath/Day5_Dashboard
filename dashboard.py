@@ -20,20 +20,28 @@ def main():
         ''')
         dataframe = db_execute_fetch("Select * from cleantweetinfo where (id < 6);", tablename='cleantweetinfo', dbName = 'tweets')
         st.table(dataframe)
-        #dataframe = db_execute_fetch("Select polarity from cleantweetinfo where (id < 200)", tablename='cleantweetinfo', dbName = 'tweets')
+        dataframe2 = db_execute_fetch("Select polarity from cleantweetinfo where (id < 200)", tablename='cleantweetinfo', dbName = 'tweets')
         def summerize(polarity):
             pos, neu, neg = 0, 0, 0
             for x in polarity:
-                if x < 0:
+                if x > 0:
                     pos += 1
                 elif x == 0:
                     neu += 1
-                elif x > 0:
+                elif x < 0:
                     neg += 1
             return pos, neu, neg
-        
+        data = list(summerize(list(dataframe2['polarity'])))
+        labels = ["positive", "neutral", "negative"]
+        fig = plt.figure(figsize =(10, 7))
+        plt.pie(data, labels = labels)
+        plt.savefig('pie_chart.png')
 
-        #st.table(dataframe)
+        st.write('''
+        ## Positive-Neutral-Negative split
+        Here's a pie chart showing the proportion of the tweets that have positive, neutral, and negative sentiment.
+        ''')
+        st.image('pie_chart.png')
     elif app_mode == 'Topic Modelling':
         st.write('''
         ## Topic Modelling
