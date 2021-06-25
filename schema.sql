@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `TweetInformation` 
+CREATE TABLE IF NOT EXISTS `CleanTweetInfo` 
 (
     `id` INT NOT NULL AUTO_INCREMENT,
     `clean_text` TEXT DEFAULT NULL,
